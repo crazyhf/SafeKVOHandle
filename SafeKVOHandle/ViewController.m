@@ -24,6 +24,8 @@
 {
     [super viewDidLoad];
     
+    self.testKVOHandler = [[SafeKVOHandle alloc] initWithObservedObj:self reactiveTarget:self];
+    
     [self onAddSaveKVOHandleAction:nil];
 }
 
@@ -32,21 +34,17 @@
 
 - (IBAction)onTestSaveKVOHandleAction:(id)sender
 {
-    if (nil == self.testKVOHandler) {
-        [self onAddSaveKVOHandleAction:nil];
-    }
-    
     self.testKVOKey = !self.testKVOKey;
 }
 
 - (IBAction)onAddSaveKVOHandleAction:(id)sender
 {
-    self.testKVOHandler = [SafeKVOHandle KVOHandler:self keyPath:@"testKVOKey" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld target:self selector:@selector(onTestKVOKeyChanged:)];
+    [self.testKVOHandler addObserveKeyPath:@"testKVOKey" reactiveSelector:@selector(onTestKVOKeyChanged:) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld];
 }
 
 - (IBAction)onRemoveSaveKVOHandleAction:(id)sender
 {
-    self.testKVOHandler = nil;
+    [self.testKVOHandler removeObserveKeyPath:@"testKVOKey"];
 }
 
 

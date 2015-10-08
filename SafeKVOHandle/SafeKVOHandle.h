@@ -10,19 +10,14 @@
 
 @interface SafeKVOHandle : NSObject
 
-@property (nonatomic, assign) SEL KVOSelector;
-
-@property (nonatomic, weak) id KVOTarget;
-
-
-+ (instancetype)KVOHandler:(NSObject *)object
-                   keyPath:(NSString *)keyPath
-                   options:(NSKeyValueObservingOptions)options
-                    target:(id)target selector:(SEL)selector;
 
 - (id)initWithObservedObj:(NSObject *)object
-                  keyPath:(NSString *)keyPath
-                  options:(NSKeyValueObservingOptions)options
-                   target:(id)target selector:(SEL)selector;
+           reactiveTarget:(id)target;
+
+- (void)addObserveKeyPath:(NSString *)keyPath
+         reactiveSelector:(SEL)selector
+                  options:(NSKeyValueObservingOptions)options;
+
+- (void)removeObserveKeyPath:(NSString *)keyPath;
 
 @end

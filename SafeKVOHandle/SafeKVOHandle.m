@@ -13,47 +13,67 @@
 
 @interface SafeKVOHandle()
 
-@property (nonatomic, copy) NSString * observedKeyPath;
+@property (nonatomic, weak) id KVOTarget;
 
 /// must be strong policy
 @property (nonatomic, strong) NSObject * observedObj;
+
+@property (nonatomic, strong) NSMutableSet * keyPathSet;
+
+@property (nonatomic, strong) NSMutableDictionary * KVOSelectorDic;
 
 @end
 
 
 @implementation SafeKVOHandle
 
-+ (instancetype)KVOHandler:(NSObject *)object
-                   keyPath:(NSString *)keyPath
-                   options:(NSKeyValueObservingOptions)options
-                    target:(id)target selector:(SEL)selector
+- (id)initWithObservedObj:(NSObject *)object
+           reactiveTarget:(id)target
 {
-    return [[self alloc] initWithObservedObj:object keyPath:keyPath options:options target:target selector:selector];
-}
-
-
-- (id)initWithObservedObj:(NSObject *)object keyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options target:(id)target selector:(SEL)selector
-{
-    NSAssert(nil != keyPath, @"keyPath mustn't be nil");
-    
     if (self = [super init]) {
-        self.observedKeyPath = keyPath;
         self.observedObj = object;
-        
         self.KVOTarget   = target;
-        self.KVOSelector = selector;
         
-        [self.observedObj addObserver:self
-                           forKeyPath:self.observedKeyPath
-                              options:options context:nil];
+        self.keyPathSet     = [NSMutableSet set];
+        self.KVOSelectorDic = [NSMutableDictionary dictionary];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [self.observedObj removeObserver:self
-                          forKeyPath:self.observedKeyPath context:nil];
+    for (NSString * aKeyPath in self.keyPathSet) {
+        [self.observedObj removeObserver:self
+                              forKeyPath:aKeyPath context:nil];
+    }
+}
+
+
+#pragma mark - observe handle
+
+- (void)addObserveKeyPath:(NSString *)keyPath
+         reactiveSelector:(SEL)selector
+                  options:(NSKeyValueObservingOptions)options
+{
+    if (YES == [self.keyPathSet containsObject:keyPath]) {
+        [self.observedObj removeObserver:self forKeyPath:keyPath context:nil];
+    } else {
+        [self.keyPathSet addObject:keyPath];
+    }
+    
+    [self.observedObj addObserver:self forKeyPath:keyPath options:options context:nil];
+    
+    [self.KVOSelectorDic setValue:NSStringFromSelector(selector) forKey:keyPath];
+}
+
+- (void)removeObserveKeyPath:(NSString *)keyPath
+{
+    if (YES == [self.keyPathSet containsObject:keyPath]) {
+        [self.observedObj removeObserver:self forKeyPath:keyPath context:nil];
+        [self.keyPathSet removeObject:keyPath];
+    }
+    
+    [self.KVOSelectorDic removeObjectForKey:keyPath];
 }
 
 
@@ -61,11 +81,16 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (self.observedObj == object
-        && YES == [self.observedKeyPath isEqualToString:keyPath]) {
-        if (YES == [self.KVOTarget respondsToSelector:self.KVOSelector])
+    if (self.observedObj == object) {
+        SEL aKVOSelector = nil;
+        NSString * aSelectorName = [self.KVOSelectorDic valueForKey:[self.keyPathSet member:keyPath]];
+        if (nil != aSelectorName) {
+            aKVOSelector = NSSelectorFromString(aSelectorName);
+        }
+        
+        if (nil != aKVOSelector && YES == [self.KVOTarget respondsToSelector:aKVOSelector])
         {
-            Method aKVOMethod = class_getInstanceMethod(object_getClass(self.KVOTarget), self.KVOSelector);
+            Method aKVOMethod = class_getInstanceMethod(object_getClass(self.KVOTarget), aKVOSelector);
             
             /**
              *  ios method type encoding : https://code.google.com/p/jscocoa/wiki/MethodEncoding
@@ -74,8 +99,8 @@
             
             if (0 == strcmp(method_getTypeEncoding(aKVOMethod), aTypeEncoding))
             {
-                IMP aKVOImp = class_getMethodImplementation(object_getClass(self.KVOTarget), self.KVOSelector);
-                ((void(*)(id, SEL, NSDictionary *))aKVOImp)(self.KVOTarget, self.KVOSelector, change);
+                IMP aKVOImp = class_getMethodImplementation(object_getClass(self.KVOTarget), aKVOSelector);
+                ((void(*)(id, SEL, NSDictionary *))aKVOImp)(self.KVOTarget, aKVOSelector, change);
             }
         }
     }
