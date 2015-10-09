@@ -20,8 +20,6 @@
 
 @property (nonatomic, strong) NSMutableSet * keyPathSet;
 
-@property (nonatomic, strong) NSMutableArray * auxiliaryKeyPaths;
-
 @property (nonatomic, strong) NSMutableDictionary * KVOSelectorDic;
 
 /// super -> current
@@ -178,6 +176,14 @@
 {
     if (self.observedObj == object && YES == [self.keyPathSet containsObject:keyPath])
     {
+        if (YES == [change[NSKeyValueChangeNewKey] isKindOfClass:[NSNull class]]
+            && NO == [change[NSKeyValueChangeOldKey] isKindOfClass:[NSNull class]])
+        {
+            [self traverseRemoveObserveKeyPath:keyPath];
+            
+            [self.associateKeyPathDic removeObjectForKey:keyPath];
+        }
+        
         SEL aKVOSelector = nil;
         NSString * aSelectorName = [self.KVOSelectorDic valueForKey:keyPath];
         if (nil != aSelectorName) {
@@ -197,32 +203,6 @@
             {
                 IMP aKVOImp = class_getMethodImplementation(object_getClass(self.KVOTarget), aKVOSelector);
                 ((void(*)(id, SEL, NSDictionary *))aKVOImp)(self.KVOTarget, aKVOSelector, change);
-            }
-        }
-        
-        if (YES == [change[NSKeyValueChangeNewKey] isKindOfClass:[NSNull class]]
-            && NO == [change[NSKeyValueChangeOldKey] isKindOfClass:[NSNull class]])
-        {
-            if (0 == [self.associateKeyPathDic[keyPath] count]) {
-                for (NSString * anAuxiliary in self.auxiliaryKeyPaths) {
-                    [self traverseRemoveObserveKeyPath:anAuxiliary];
-                    
-                    [self.associateKeyPathDic removeObjectForKey:anAuxiliary];
-                }
-                
-                [self.associateKeyPathDic removeObjectForKey:keyPath];
-                
-                self.auxiliaryKeyPaths = [NSMutableArray array];
-            } else {
-                if (nil != self.auxiliaryKeyPaths && 0 == self.auxiliaryKeyPaths.count) {
-                    [self traverseRemoveObserveKeyPath:keyPath];
-                    [self.associateKeyPathDic removeObjectForKey:keyPath];
-                } else {
-                    if (nil == self.auxiliaryKeyPaths) {
-                        self.auxiliaryKeyPaths = [NSMutableArray array];
-                    }
-                    [self.auxiliaryKeyPaths addObject:keyPath];
-                }
             }
         }
     }

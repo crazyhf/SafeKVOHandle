@@ -52,7 +52,6 @@
 - (IBAction)onTestSaveKVOHandleAction:(id)sender
 {
     if (nil != self.testObject1) {
-        self.testObject1.testObject0 = nil;
         self.testObject1 = nil;
     } else {
         self.testObject1 = [[TestObject1 alloc] init];
