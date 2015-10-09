@@ -10,9 +10,30 @@
 
 #import "NSObject+KVOHelper.h"
 
+@interface TestObject0 : NSObject
+
+@property (nonatomic, strong) NSString * testKVOKey0;
+
+@end
+
+@implementation TestObject0
+@end
+
+@interface TestObject1 : NSObject
+
+@property (nonatomic, strong) NSString * testKVOKey1;
+
+@property (nonatomic, strong) TestObject0 * testObject0;
+
+@end
+
+@implementation TestObject1
+@end
+
+
 @interface ViewController ()
 
-@property (nonatomic, assign) BOOL testKVOKey;
+@property (nonatomic, strong) TestObject1 * testObject1;
 
 @end
 
@@ -30,25 +51,58 @@
 
 - (IBAction)onTestSaveKVOHandleAction:(id)sender
 {
-    self.testKVOKey = !self.testKVOKey;
+    if (nil != self.testObject1) {
+        self.testObject1 = nil;
+    } else {
+        self.testObject1 = [[TestObject1 alloc] init];
+        self.testObject1.testObject0 = [[TestObject0 alloc] init];
+        self.testObject1.testKVOKey1 = @"";
+        self.testObject1.testObject0.testKVOKey0 = @"";
+    }
 }
 
 - (IBAction)onAddSaveKVOHandleAction:(id)sender
 {
-    [self.hfKVOHandler addObserveKeyPath:@"testKVOKey" reactiveSelector:@selector(onTestKVOKeyChanged:) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld];
+    [self.hfKVOHandler addObserveKeyPath:@"testObject1"
+                        reactiveSelector:@selector(onTestObject1Changed:)
+                                 options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld];
+    [self.hfKVOHandler addObserveKeyPath:@"testObject1.testObject0"
+                        reactiveSelector:@selector(onTestObject0Changed:)
+                                 options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld];
+    [self.hfKVOHandler addObserveKeyPath:@"testObject1.testKVOKey1"
+                        reactiveSelector:@selector(onTestKVOKey1Changed:)
+                                 options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld];
+    [self.hfKVOHandler addObserveKeyPath:@"testObject1.testObject0.testKVOKey0"
+                        reactiveSelector:@selector(onTestKVOKey0Changed:)
+                                 options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld];
 }
 
 - (IBAction)onRemoveSaveKVOHandleAction:(id)sender
 {
-    [self.hfKVOHandler removeObserveKeyPath:@"testKVOKey"];
+    [self.hfKVOHandler clearAllObservedKeyPath];
 }
 
 
 #pragma mark - KVO handle
 
-- (void)onTestKVOKeyChanged:(NSDictionary *)change
+- (void)onTestObject1Changed:(NSDictionary *)change
 {
-    [[[UIAlertView alloc] initWithTitle:@"testKVOKey changed" message:change.description delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil] show];
+    NSLog(@"testObject1 changed : %@", change);
+}
+
+- (void)onTestObject0Changed:(NSDictionary *)change
+{
+    NSLog(@"testObject0 changed : %@", change);
+}
+
+- (void)onTestKVOKey1Changed:(NSDictionary *)change
+{
+    NSLog(@"testKVOKey1 changed : %@", change);
+}
+
+- (void)onTestKVOKey0Changed:(NSDictionary *)change
+{
+    NSLog(@"testKVOKey0 changed : %@", change);
 }
 
 
