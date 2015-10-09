@@ -10,6 +10,6 @@ Pod::Spec.new do |s|
   s.author       = { 'crazylhf' => 'crazylhf@gmail.com' }
   s.platform     = :ios, '5.0'
   s.requires_arc = true
-  s.source_files = 'SafeKVOHandle/SafeKVOHandle.h', 'SafeKVOHandle/SafeKVOHandle.m'
+  s.source_files = 'SafeKVOHandle/SafeKVOHandle.h', 'SafeKVOHandle/SafeKVOHandle.m', 'NSObject+KVOHelper.h', 'NSObject+KVOHelper.m'
   s.source       = { :git => 'https://github.com/crazyhf/SafeKVOHandle.git', :tag => 'v#{spec.version}' }
 end
