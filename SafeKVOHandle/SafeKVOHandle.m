@@ -208,15 +208,22 @@
                     [self traverseRemoveObserveKeyPath:anAuxiliary];
                     
                     [self.associateKeyPathDic removeObjectForKey:anAuxiliary];
+                    
+                    [self removeObserveKeyPath:anAuxiliary];
                 }
                 
                 [self.associateKeyPathDic removeObjectForKey:keyPath];
+                
+                [self removeObserveKeyPath:keyPath];
                 
                 self.auxiliaryKeyPaths = [NSMutableArray array];
             } else {
                 if (nil != self.auxiliaryKeyPaths && 0 == self.auxiliaryKeyPaths.count) {
                     [self traverseRemoveObserveKeyPath:keyPath];
+                    
                     [self.associateKeyPathDic removeObjectForKey:keyPath];
+                    
+                    [self removeObserveKeyPath:keyPath];
                 } else {
                     if (nil == self.auxiliaryKeyPaths) {
                         self.auxiliaryKeyPaths = [NSMutableArray array];
