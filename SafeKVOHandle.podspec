@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SafeKVOHandle'
-  s.version      = '3.0.0'
+  s.version      = '3.0.1'
   s.summary      = 'KVO wrapper for safe using'
   s.homepage     = 'https://github.com/crazyhf/SafeKVOHandle'
   s.license      = {
