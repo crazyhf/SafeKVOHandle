@@ -10,14 +10,17 @@
 
 @interface SafeKVOHandle : NSObject
 
-
 - (id)initWithObservedObj:(NSObject *)object
            reactiveTarget:(id)target;
+
 
 - (void)addObserveKeyPath:(NSString *)keyPath
          reactiveSelector:(SEL)selector
                   options:(NSKeyValueObservingOptions)options;
 
 - (void)removeObserveKeyPath:(NSString *)keyPath;
+
+
+- (void)clearAllObservedKeyPath;
 
 @end

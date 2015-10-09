@@ -42,10 +42,7 @@
 
 - (void)dealloc
 {
-    for (NSString * aKeyPath in self.keyPathSet) {
-        [self.observedObj removeObserver:self
-                              forKeyPath:aKeyPath context:nil];
-    }
+    [self clearAllObservedKeyPath];
 }
 
 
@@ -74,6 +71,17 @@
     }
     
     [self.KVOSelectorDic removeObjectForKey:keyPath];
+}
+
+- (void)clearAllObservedKeyPath
+{
+    for (NSString * aKeyPath in self.keyPathSet) {
+        [self.observedObj removeObserver:self
+                              forKeyPath:aKeyPath context:nil];
+    }
+    
+    [self.keyPathSet removeAllObjects];
+    [self.KVOSelectorDic removeAllObjects];
 }
 
 
