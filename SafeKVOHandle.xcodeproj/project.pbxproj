@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D285E59B1BC769E50090FA0E /* NSObject+KVOHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D285E59A1BC769E50090FA0E /* NSObject+KVOHelper.m */; };
 		D2BFA69F1BC64E2500A8B70E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFA69E1BC64E2500A8B70E /* main.m */; };
 		D2BFA6A21BC64E2500A8B70E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFA6A11BC64E2500A8B70E /* AppDelegate.m */; };
 		D2BFA6A51BC64E2500A8B70E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BFA6A41BC64E2500A8B70E /* ViewController.m */; };
@@ -28,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D285E5991BC769E50090FA0E /* NSObject+KVOHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+KVOHelper.h"; sourceTree = "<group>"; };
+		D285E59A1BC769E50090FA0E /* NSObject+KVOHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+KVOHelper.m"; sourceTree = "<group>"; };
 		D2BFA6991BC64E2500A8B70E /* SafeKVOHandle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SafeKVOHandle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2BFA69D1BC64E2500A8B70E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2BFA69E1BC64E2500A8B70E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -90,6 +93,8 @@
 				D2BFA6A41BC64E2500A8B70E /* ViewController.m */,
 				D2BFA6C21BC64E4F00A8B70E /* SafeKVOHandle.h */,
 				D2BFA6C31BC64E4F00A8B70E /* SafeKVOHandle.m */,
+				D285E5991BC769E50090FA0E /* NSObject+KVOHelper.h */,
+				D285E59A1BC769E50090FA0E /* NSObject+KVOHelper.m */,
 				D2BFA6A61BC64E2500A8B70E /* Main.storyboard */,
 				D2BFA6A91BC64E2500A8B70E /* Images.xcassets */,
 				D2BFA6AB1BC64E2500A8B70E /* LaunchScreen.xib */,
@@ -228,6 +233,7 @@
 				D2BFA6C41BC64E4F00A8B70E /* SafeKVOHandle.m in Sources */,
 				D2BFA6A21BC64E2500A8B70E /* AppDelegate.m in Sources */,
 				D2BFA69F1BC64E2500A8B70E /* main.m in Sources */,
+				D285E59B1BC769E50090FA0E /* NSObject+KVOHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +430,7 @@
 				D2BFA6BE1BC64E2600A8B70E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D2BFA6BF1BC64E2600A8B70E /* Build configuration list for PBXNativeTarget "SafeKVOHandleTests" */ = {
 			isa = XCConfigurationList;
@@ -432,6 +439,7 @@
 				D2BFA6C11BC64E2600A8B70E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

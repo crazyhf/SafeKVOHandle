@@ -8,13 +8,11 @@
 
 #import "ViewController.h"
 
-#import "SafeKVOHandle.h"
+#import "NSObject+KVOHelper.h"
 
 @interface ViewController ()
 
 @property (nonatomic, assign) BOOL testKVOKey;
-
-@property (nonatomic, strong) SafeKVOHandle * testKVOHandler;
 
 @end
 
@@ -23,8 +21,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.testKVOHandler = [[SafeKVOHandle alloc] initWithObservedObj:self reactiveTarget:self];
     
     [self onAddSaveKVOHandleAction:nil];
 }
@@ -39,12 +35,12 @@
 
 - (IBAction)onAddSaveKVOHandleAction:(id)sender
 {
-    [self.testKVOHandler addObserveKeyPath:@"testKVOKey" reactiveSelector:@selector(onTestKVOKeyChanged:) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld];
+    [self.hfKVOHandler addObserveKeyPath:@"testKVOKey" reactiveSelector:@selector(onTestKVOKeyChanged:) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld];
 }
 
 - (IBAction)onRemoveSaveKVOHandleAction:(id)sender
 {
-    [self.testKVOHandler removeObserveKeyPath:@"testKVOKey"];
+    [self.hfKVOHandler removeObserveKeyPath:@"testKVOKey"];
 }
 
 
